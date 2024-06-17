@@ -1,5 +1,5 @@
-import Layout from "@/components/Layout";
+import Map from "@/components/Map";
 
 export default function Home() {
-  return <h1 className="">메인</h1>;
+  return <Map />;
 }
