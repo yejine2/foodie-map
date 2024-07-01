@@ -7,7 +7,7 @@ export default async function handler(
   res: NextApiResponse<StoreType[]>
 ) {
   const prisma = new PrismaClient();
-  const stores = await prisma.store.findMany(); // get all records
+  const stores = await prisma.store.findMany({ orderBy: { id: "asc" } }); // get all records
 
   res.status(200).json(stores);
 }
