@@ -1,14 +1,15 @@
+import { StoreType } from "@/interface";
 import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
 
 interface MarkerProps {
   map: any;
-  storeDatas: any[];
+  stores: StoreType[];
   setCurrentStore: Dispatch<SetStateAction<any>>;
 }
 
 export default function Markers({
   map,
-  storeDatas,
+  stores: storeDatas,
   setCurrentStore,
 }: MarkerProps) {
   const loadKakaoMarkers = useCallback(() => {
