@@ -7,15 +7,11 @@ interface MarkerProps {
   setCurrentStore: Dispatch<SetStateAction<any>>;
 }
 
-export default function Markers({
-  map,
-  stores: storeDatas,
-  setCurrentStore,
-}: MarkerProps) {
+export default function Markers({ map, stores, setCurrentStore }: MarkerProps) {
   const loadKakaoMarkers = useCallback(() => {
     if (map) {
       // 식당 데이터 마커
-      storeDatas?.map((store) => {
+      stores?.map((store) => {
         // 마커 이미지 변경
         var imageSrc = store?.category
             ? `/images/markers/${store?.category}.png`
@@ -75,7 +71,7 @@ export default function Markers({
         });
       });
     }
-  }, [map, setCurrentStore, storeDatas]);
+  }, [map, setCurrentStore, stores]);
 
   useEffect(() => {
     loadKakaoMarkers();
