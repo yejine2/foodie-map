@@ -1,11 +1,13 @@
 import { useState } from "react";
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 
 import { BiMenu } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { data, status } = useSession();
 
   return (
     <>
@@ -23,12 +25,15 @@ export default function Navbar() {
           <Link href="/users/likes" className="navbar__list--item">
             찜한 가게
           </Link>
-          <Link href="/users/login" className="navbar__list--item">
-            로그인
-          </Link>
-          <Link href="/users/mypage" className="navbar__list--item">
-            마이페이지
-          </Link>
+          {status === "authenticated" ? (
+            <button type="button" onClick={() => signOut()}>
+              로그아웃
+            </button>
+          ) : (
+            <Link href="/api/auth/signin" className="navbar__list--item">
+              로그인
+            </Link>
+          )}
         </div>
         {/* mobile button */}
         <div
@@ -43,40 +48,20 @@ export default function Navbar() {
       {isOpen && (
         <div className="navbar--mobile">
           <div className="navbar__list--mobile">
-            <Link
-              href="/stores"
-              className="navbar__list--item--mobile"
-              onClick={() => setIsOpen(false)}
-            >
+            <Link href="/stores" className="navbar__list--item--mobile">
               맛집 목록
             </Link>
-            <Link
-              href="/stores/new"
-              className="navbar__list--item--mobile"
-              onClick={() => setIsOpen(false)}
-            >
+            <Link href="/stores/new" className="navbar__list--item--mobile">
               맛집 등록
             </Link>
-            <Link
-              href="/users/likes"
-              className="navbar__list--item--mobile"
-              onClick={() => setIsOpen(false)}
-            >
+            <Link href="/users/likes" className="navbar__list--item--mobile">
               찜한 가게
             </Link>
             <Link
-              href="/users/login"
+              href="/api/auth/signin"
               className="navbar__list--item--mobile"
-              onClick={() => setIsOpen(false)}
             >
               로그인
-            </Link>
-            <Link
-              href="/users/mypage"
-              className="navbar__list--item--mobile"
-              onClick={() => setIsOpen(false)}
-            >
-              마이페이지
             </Link>
           </div>
         </div>
