@@ -3,8 +3,12 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { StoreType } from "@/interface";
 import Loader from "@/components/Loader";
+import { useState } from "react";
+import Map from "@/components/Map";
+import Marker from "@/components/Marker";
 
 export default function StorePage() {
+  const [map, setMap] = useState(null);
   const router = useRouter();
   const { id } = router.query;
 
@@ -16,9 +20,11 @@ export default function StorePage() {
   const {
     data: store,
     isFetching,
+    isSuccess,
     isError,
   } = useQuery(`store-${id}`, fetchStore, {
     enabled: !!id,
+    refetchOnWindowFocus: false,
   });
 
   if (isError) {
@@ -34,27 +40,38 @@ export default function StorePage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <div className="px-4 sm:px-0">
-        <h3 className="text-base font-semibold leading-7 text-gray-900">
-          {store?.name}
-        </h3>
-        <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
-          {store?.address}
-        </p>
+    <>
+      <div className="max-w-5xl mx-auto px-4 py-8">
+        <div className="px-4 sm:px-0">
+          <h3 className="text-base font-semibold leading-7 text-gray-900">
+            {store?.name}
+          </h3>
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+            {store?.address}
+          </p>
+        </div>
+        <div className="mt-6 border-t border-gray-100">
+          <dl className="divide-y divide-gray-100">
+            <StoreInfoItem title="카테고리" value={store?.category} />
+            <StoreInfoItem title="주소" value={store?.address} />
+            <StoreInfoItem title="위도" value={store?.lat} />
+            <StoreInfoItem title="경도" value={store?.lng} />
+            <StoreInfoItem title="연락처" value={store?.phone} />
+            <StoreInfoItem
+              title="식품인증구분"
+              value={store?.foodCertifyName}
+            />
+            <StoreInfoItem title="업종명" value={store?.storeType} />
+          </dl>
+        </div>
       </div>
-      <div className="mt-6 border-t border-gray-100">
-        <dl className="divide-y divide-gray-100">
-          <StoreInfoItem title="카테고리" value={store?.category} />
-          <StoreInfoItem title="주소" value={store?.address} />
-          <StoreInfoItem title="위도" value={store?.lat} />
-          <StoreInfoItem title="경도" value={store?.lng} />
-          <StoreInfoItem title="연락처" value={store?.phone} />
-          <StoreInfoItem title="식품인증구분" value={store?.foodCertifyName} />
-          <StoreInfoItem title="업종명" value={store?.storeType} />
-        </dl>
-      </div>
-    </div>
+      {isSuccess && (
+        <div className="overflow-hidden w-full mb-20 max-w-5xl mx-auto max-h-[600px]">
+          <Map setMap={setMap} lat={store?.lat} lng={store?.lng} zoom={1} />
+          <Marker map={map} store={store} />
+        </div>
+      )}
+    </>
   );
 }
 
