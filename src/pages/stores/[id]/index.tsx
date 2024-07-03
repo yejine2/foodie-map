@@ -1,6 +1,74 @@
-import React from "react";
+import { useRouter } from "next/router";
+import { useQuery } from "react-query";
+import axios from "axios";
+import { StoreType } from "@/interface";
+import Loader from "@/components/Loader";
 
-// 맛집 상세 페이지
-export default function StoreDetailPage() {
-  return <div>StoreDetailPage</div>;
+export default function StorePage() {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const fetchStore = async () => {
+    const { data } = await axios(`/api/stores?id=${id}`);
+    return data as StoreType;
+  };
+
+  const {
+    data: store,
+    isFetching,
+    isError,
+  } = useQuery(`store-${id}`, fetchStore, {
+    enabled: !!id,
+  });
+
+  if (isError) {
+    return (
+      <div className="w-full h-screen mx-auto pt-[10%] text-red-500 text-center font-semibold">
+        다시 시도해주세요
+      </div>
+    );
+  }
+
+  if (isFetching) {
+    return <Loader className="mt-[20%]" />;
+  }
+
+  return (
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="px-4 sm:px-0">
+        <h3 className="text-base font-semibold leading-7 text-gray-900">
+          {store?.name}
+        </h3>
+        <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+          {store?.address}
+        </p>
+      </div>
+      <div className="mt-6 border-t border-gray-100">
+        <dl className="divide-y divide-gray-100">
+          <StoreInfoItem title="카테고리" value={store?.category} />
+          <StoreInfoItem title="주소" value={store?.address} />
+          <StoreInfoItem title="위도" value={store?.lat} />
+          <StoreInfoItem title="경도" value={store?.lng} />
+          <StoreInfoItem title="연락처" value={store?.phone} />
+          <StoreInfoItem title="식품인증구분" value={store?.foodCertifyName} />
+          <StoreInfoItem title="업종명" value={store?.storeType} />
+        </dl>
+      </div>
+    </div>
+  );
 }
+
+const StoreInfoItem = ({
+  title,
+  value = "정보 없음",
+}: {
+  title: string;
+  value?: string | null;
+}) => (
+  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+    <dt className="text-sm font-medium leading-6 text-gray-900">{title}</dt>
+    <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+      {value}
+    </dd>
+  </div>
+);
