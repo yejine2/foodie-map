@@ -7,11 +7,11 @@ import { useInfiniteQuery } from "react-query";
 
 import axios from "axios";
 import Loading from "@/components/Loading";
-import { useRouter } from "next/router";
 
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import Loader from "@/components/Loader";
 import SearchFilter from "@/components/SearchFilter";
+import useDebounce from "@/hooks/useDebounce";
 
 export default function StoreListPage() {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -20,9 +20,11 @@ export default function StoreListPage() {
   const [q, setQ] = useState<string | null>(null);
   const [district, setDistrict] = useState<string | null>(null);
 
+  const debouncedQ = useDebounce(q, 500); // 500ms 지연
+
   // 검색어, 선택 지역
   const searchParams = {
-    q: q,
+    q: debouncedQ,
     district: district,
   };
 
@@ -47,6 +49,7 @@ export default function StoreListPage() {
     isError,
     isLoading,
   } = useInfiniteQuery(["stores", searchParams], fetchStores, {
+    refetchOnWindowFocus: false,
     getNextPageParam: (lastPage: any) =>
       lastPage.data?.length > 0 ? lastPage.page + 1 : undefined,
   });
@@ -79,7 +82,7 @@ export default function StoreListPage() {
   }
 
   return (
-    <div className="px-4 md:max-w-4xl mx-auto py-8">
+    <div className="px-4 md:max-w-4xl mx-auto py-4 md:py-8">
       <SearchFilter setQ={setQ} setDistrict={setDistrict} />
       <ul role="list" className="divide-y divide-gray-100">
         {isLoading ? (
@@ -87,39 +90,45 @@ export default function StoreListPage() {
         ) : (
           stores?.pages?.map((page, index) => (
             <React.Fragment key={index}>
-              {page.data.map((store: StoreType, i: number) => (
-                <li className="flex justify-between gap-x-6 py-5" key={i}>
-                  <div className="flex gap-x-4">
-                    <Image
-                      src={
-                        store?.category
-                          ? `/images/markers/${store?.category}.png`
-                          : "/images/markers/default.png"
-                      }
-                      width={48}
-                      height={48}
-                      alt="아이콘 이미지"
-                    />
-                    <div>
+              {page.data.length > 0 && !isLoading ? (
+                page.data.map((store: StoreType, i: number) => (
+                  <li className="flex justify-between gap-x-6 py-5" key={i}>
+                    <div className="flex gap-x-4">
+                      <Image
+                        src={
+                          store?.category
+                            ? `/images/markers/${store?.category}.png`
+                            : "/images/markers/default.png"
+                        }
+                        width={48}
+                        height={48}
+                        alt="아이콘 이미지"
+                      />
+                      <div>
+                        <div className="text-sm font-semibold leading-6 text-gray-900">
+                          {store?.name}
+                        </div>
+                        <div className="mt-1 text-xs truncate font-semibold leading-5 text-gray-500">
+                          {store?.storeType}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="hidden sm:flex sm:flex-col sm:items-end">
                       <div className="text-sm font-semibold leading-6 text-gray-900">
-                        {store?.name}
+                        {store?.address}
                       </div>
                       <div className="mt-1 text-xs truncate font-semibold leading-5 text-gray-500">
-                        {store?.storeType}
+                        {store?.phone || "번호없음"} | {store?.foodCertifyName}{" "}
+                        | {store?.category}
                       </div>
                     </div>
-                  </div>
-                  <div className="hidden sm:flex sm:flex-col sm:items-end">
-                    <div className="text-sm font-semibold leading-6 text-gray-900">
-                      {store?.address}
-                    </div>
-                    <div className="mt-1 text-xs truncate font-semibold leading-5 text-gray-500">
-                      {store?.phone || "번호없음"} | {store?.foodCertifyName} |{" "}
-                      {store?.category}
-                    </div>
-                  </div>
-                </li>
-              ))}
+                  </li>
+                ))
+              ) : (
+                <p className="text-sm text-center my-20 text-gray-500">
+                  데이터가 없습니다.
+                </p>
+              )}
             </React.Fragment>
           ))
         )}
