@@ -12,9 +12,11 @@ import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import Loader from "@/components/Loader";
 import SearchFilter from "@/components/SearchFilter";
 import useDebounce from "@/hooks/useDebounce";
+import { useRouter } from "next/router";
 
 export default function StoreListPage() {
   const ref = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
   const pageRef = useIntersectionObserver(ref, {});
   const isPageEnd = !!pageRef?.isIntersecting;
   const [q, setQ] = useState<string | null>(null);
@@ -92,7 +94,11 @@ export default function StoreListPage() {
             <React.Fragment key={index}>
               {page.data.length > 0 && !isLoading ? (
                 page.data.map((store: StoreType, i: number) => (
-                  <li className="flex justify-between gap-x-6 py-5" key={i}>
+                  <li
+                    className="flex justify-between gap-x-6 py-5 cursor-pointer hover:bg-gray-50"
+                    key={i}
+                    onClick={() => router.push(`/stores/${store.id}`)}
+                  >
                     <div className="flex gap-x-4">
                       <Image
                         src={
