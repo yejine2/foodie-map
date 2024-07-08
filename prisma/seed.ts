@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/db";
 // import * as data from "../src/data/store_data.json";
-
-const prisma = new PrismaClient();
 
 // async function seedData() {
 //   data?.["DATA"]?.map(async (store) => {
