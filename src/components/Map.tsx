@@ -1,6 +1,8 @@
 /*global kakao*/
+import { locationState, mapState } from "@/atom";
 import Script from "next/script";
 import { Dispatch, SetStateAction } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 declare global {
   interface Window {
@@ -9,27 +11,25 @@ declare global {
 }
 
 interface MapProps {
-  setMap: Dispatch<SetStateAction<any>>;
   lat?: string | null;
   lng?: string | null;
   zoom?: number;
 }
-const DEFAULT_LAT = 37.497;
-const DEFAULT_LNG = 127.0254;
 
-const DEFAULT_ZOOM = 3;
+export default function Map({ lat, lng, zoom }: MapProps) {
+  const setMap = useSetRecoilState(mapState);
+  const location = useRecoilValue(locationState);
 
-export default function Map({ setMap, lat, lng, zoom }: MapProps) {
   // 비동기 통신으로 페이지에 v3를 동적으로 삽입
   const loadKakaoMap = () => {
     window.kakao.maps.load(() => {
       const mapContainer = document.getElementById("map");
       const mapOption = {
         center: new window.kakao.maps.LatLng(
-          lat ?? DEFAULT_LAT,
-          lng ?? DEFAULT_LNG
+          lat ?? location.lat,
+          lng ?? location.lng
         ),
-        level: zoom ?? DEFAULT_ZOOM,
+        level: zoom ?? location.zoom,
       };
       const map = new window.kakao.maps.Map(mapContainer, mapOption);
 
