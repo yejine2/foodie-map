@@ -91,7 +91,6 @@ export default function StoreNewPage() {
                 )}
               </div>
             </div>
-
             <div>
               <label
                 htmlFor="phone"
