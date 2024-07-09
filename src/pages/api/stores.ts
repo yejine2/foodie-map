@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { StoreApiResponse, StoreType } from "@/interface";
 import prisma from "@/db";
+import axios from "axios";
 
 interface Responsetype {
   page?: string;
@@ -15,37 +16,58 @@ export default async function handler(
 ) {
   const { page = "", limit = "", q, district }: Responsetype = req.query;
 
-  if (page) {
-    const count = await prisma.store.count(); // 총 레코드 갯수
-    const skipPage = parseInt(page) - 1;
-    const pageSize = 10; // 페이지당 데이터 수
+  if (req.method === "POST") {
+    const formData = req.body;
+    const headers = {
+      Authorization: `KakaoAK ${process.env.KAKAO_CLIENT_ID}`,
+    };
 
-    const stores = await prisma.store.findMany({
-      orderBy: { id: "asc" },
-      where: {
-        name: q ? { contains: q } : {},
-        address: district ? { contains: district } : {},
-      },
-      take: parseInt(limit),
-      skip: skipPage * pageSize,
+    // https://developers.kakao.com/docs/latest/ko/local/dev-guide#address-coord
+    const { data } = await axios.get(
+      `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURI(
+        formData.address
+      )}`,
+      { headers }
+    );
+
+    const result = await prisma.store.create({
+      data: { ...formData, lat: data.documents[0].y, lng: data.documents[0].x },
     });
 
-    res.status(200).json({
-      page: parseInt(page),
-      data: stores,
-      totalCount: count,
-      totalPage: Math.ceil(count / 10),
-    });
+    return res.status(200).json(result);
   } else {
-    const { id }: { id?: string } = req.query;
+    if (page) {
+      const count = await prisma.store.count(); // 총 레코드 갯수
+      const skipPage = parseInt(page) - 1;
+      const pageSize = 10; // 페이지당 데이터 수
 
-    const stores = await prisma.store.findMany({
-      orderBy: { id: "asc" },
-      where: {
-        id: id ? parseInt(id) : {},
-      },
-    });
+      const stores = await prisma.store.findMany({
+        orderBy: { id: "asc" },
+        where: {
+          name: q ? { contains: q } : {},
+          address: district ? { contains: district } : {},
+        },
+        take: parseInt(limit),
+        skip: skipPage * pageSize,
+      });
 
-    return res.status(200).json(id ? stores[0] : stores);
+      res.status(200).json({
+        page: parseInt(page),
+        data: stores,
+        totalCount: count,
+        totalPage: Math.ceil(count / 10),
+      });
+    } else {
+      const { id }: { id?: string } = req.query;
+
+      const stores = await prisma.store.findMany({
+        orderBy: { id: "asc" },
+        where: {
+          id: id ? parseInt(id) : {},
+        },
+      });
+
+      return res.status(200).json(id ? stores[0] : stores);
+    }
   }
 }
