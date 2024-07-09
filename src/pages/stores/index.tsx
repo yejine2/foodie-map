@@ -13,27 +13,28 @@ import Loader from "@/components/Loader";
 import SearchFilter from "@/components/SearchFilter";
 import useDebounce from "@/hooks/useDebounce";
 import { useRouter } from "next/router";
+import { searchState } from "@/atom";
+import { useRecoilValue } from "recoil";
 
 export default function StoreListPage() {
   const ref = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
   const pageRef = useIntersectionObserver(ref, {});
   const isPageEnd = !!pageRef?.isIntersecting;
-  const [q, setQ] = useState<string | null>(null);
-  const [district, setDistrict] = useState<string | null>(null);
-
-  const debouncedQ = useDebounce(q, 500); // 500ms 지연
+  const searchValue = useRecoilValue(searchState);
+  const debouncedQ = useDebounce(searchValue?.q, 500); // 500ms 지연
+  const limit = 10;
 
   // 검색어, 선택 지역
   const searchParams = {
     q: debouncedQ,
-    district: district,
+    district: searchValue?.district,
   };
 
   const fetchStores = async ({ pageParam = 1 }) => {
     const { data } = await axios("/api/stores?page=" + pageParam, {
       params: {
-        limit: 10,
+        limit,
         page: pageParam,
         ...searchParams,
       },
@@ -52,8 +53,9 @@ export default function StoreListPage() {
     isLoading,
   } = useInfiniteQuery(["stores", searchParams], fetchStores, {
     refetchOnWindowFocus: false,
-    getNextPageParam: (lastPage: any) =>
-      lastPage.data?.length > 0 ? lastPage.page + 1 : undefined,
+    getNextPageParam: (lastPage) => {
+      return lastPage?.data?.length === limit ? lastPage.page + 1 : undefined;
+    },
   });
 
   const fetchNext = useCallback(async () => {
@@ -85,7 +87,7 @@ export default function StoreListPage() {
 
   return (
     <div className="px-4 md:max-w-4xl mx-auto py-4 md:py-8">
-      <SearchFilter setQ={setQ} setDistrict={setDistrict} />
+      <SearchFilter />
       <ul role="list" className="divide-y divide-gray-100">
         {isLoading ? (
           <Loading />
