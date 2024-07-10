@@ -22,14 +22,17 @@ export default function Mypage() {
       <div className="mt-6 border-t border-gray-100">
         <dl className="divide-y divide-gray-100">
           <InfoRow label="이름" content={session?.user.name ?? "사용자"} />
-          <InfoRow label="이메일" content={session?.user.email} />
+          <InfoRow
+            label="이메일"
+            content={session?.user.email ?? "이메일 정보가 없습니다."}
+          />
           <InfoRow
             label="이미지"
             content={
               <img
                 width={48}
                 height={48}
-                className="rounded-full"
+                className="rounded-full aspect-square"
                 alt="프로필 이미지"
                 src={session?.user.image ?? "/images/markers/default.png"}
               />

@@ -1,6 +1,6 @@
 import Loading from "@/components/Loading";
 import StoreList from "@/components/StoreList";
-import { LikeApiResponse, LikeInterface } from "@/interface";
+import { LikeApiResponse, LikeType } from "@/interface";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
@@ -37,7 +37,7 @@ export default function LikesPage() {
         {isLoading ? (
           <Loading />
         ) : (
-          likes?.data?.map((like: LikeInterface, index) => (
+          likes?.data?.map((like: LikeType, index) => (
             <StoreList i={index} store={like.store} key={index} />
           ))
         )}
