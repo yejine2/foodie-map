@@ -18,6 +18,19 @@ export interface StoreApiResponse {
   page?: number;
 }
 
+export interface LikeInterface {
+  id: number;
+  storeId: number;
+  userId: number;
+  store?: StoreType;
+}
+
+export interface LikeApiResponse {
+  data?: LikeInterface[];
+  totalPage?: number;
+  page?: number;
+}
+
 export interface LocationType {
   lat?: string | null;
   lng?: string | null;
@@ -27,17 +40,4 @@ export interface LocationType {
 export interface SearchType {
   q?: string;
   district?: string;
-}
-
-export interface LikeInterface {
-  id: number;
-  storeId: number;
-  userId: number;
-}
-
-export interface LikeApiResponse {
-  data?: LikeInterface[];
-  totalPage?: number;
-  totalCount?: number;
-  page?: number;
 }
