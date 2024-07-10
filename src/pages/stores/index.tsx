@@ -134,7 +134,7 @@ export default function StoreListPage() {
                 ))
               ) : (
                 <p className="text-sm text-center my-20 text-gray-500">
-                  데이터가 없습니다.
+                  검색 결과가 없습니다.
                 </p>
               )}
             </React.Fragment>

@@ -8,6 +8,7 @@ import Map from "@/components/Map";
 import Marker from "@/components/Marker";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
 
 export default function StorePage() {
   const router = useRouter();
@@ -28,6 +29,26 @@ export default function StorePage() {
     enabled: !!id,
     refetchOnWindowFocus: false,
   });
+
+  const handleDelete = async () => {
+    const confirm = window.confirm("해당 가게를 삭제하시겠습니까?");
+
+    if (confirm && store) {
+      try {
+        const result = await axios.delete(`/api/stores?id=${store?.id}`);
+
+        if (result.status === 200) {
+          toast.success("가게를 삭제했습니다.");
+          router.replace("/");
+        } else {
+          toast.error("다시 시도해주세요.");
+        }
+      } catch (e) {
+        console.log(e);
+        toast.error("다시 시도해주세요.");
+      }
+    }
+  };
 
   if (isError) {
     return (
@@ -63,6 +84,7 @@ export default function StorePage() {
               </Link>
               <button
                 type="button"
+                onClick={handleDelete}
                 className="underline hover:text-gray-400 text-sm text-gray-700"
               >
                 삭제
