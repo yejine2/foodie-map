@@ -1,7 +1,8 @@
+"use client";
+
 /*global kakao*/
 import { locationState, mapState } from "@/atom";
 import Script from "next/script";
-import { Dispatch, SetStateAction } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 declare global {

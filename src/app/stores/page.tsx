@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useEffect, useCallback } from "react";
 import { useInfiniteQuery } from "react-query";
 import axios from "axios";

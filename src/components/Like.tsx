@@ -5,7 +5,6 @@ import { useQuery } from "react-query";
 
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
 
 interface LikeProps {
   storeId: number;
