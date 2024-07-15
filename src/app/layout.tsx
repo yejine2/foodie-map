@@ -3,7 +3,7 @@ import { NextLayout, NextProvider } from "./providers";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "푸디맵 | 맛집 지도",
+  title: "푸디맵",
   description: "푸디맵으로 쉽게 찾는 나의 맛집",
 };
 
