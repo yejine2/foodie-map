@@ -9,14 +9,11 @@ import Pagination from "../Pagination";
 
 interface CommentProps {
   storeId: number;
-  params?: {
-    page?: string;
-  };
+  page: string;
 }
 
-export default function Comments({ storeId, params }: CommentProps) {
+export default function Comments({ storeId, page }: CommentProps) {
   const { status } = useSession();
-  const page = params?.page || "1";
 
   const fetchComments = async () => {
     const { data } = await axios(
@@ -34,13 +31,10 @@ export default function Comments({ storeId, params }: CommentProps) {
   return (
     <div className="md:max-w-2xl py-8 px-2 mb-20 mx-auto">
       <h3 className="text-lg font-semibold">댓글</h3>
-      {/* comment form */}
       {status === "authenticated" && (
         <CommentForm storeId={storeId} refetch={refetch} />
       )}
-      {/* comment list */}
       <CommentList comments={comments} />
-      {/* pagination */}
       <Pagination
         total={comments?.totalPage}
         page={page}

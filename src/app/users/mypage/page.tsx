@@ -13,8 +13,12 @@ interface InfoRowProps {
   content: React.ReactNode;
 }
 
-export default function Mypage({ params }: { params: { page: string } }) {
-  const page = params?.page || "1";
+export default function Mypage({
+  searchParams,
+}: {
+  searchParams: { page: string };
+}) {
+  const page = searchParams?.page || "1";
 
   const fetchComments = async () => {
     const { data } = await axios(

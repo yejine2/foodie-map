@@ -26,7 +26,6 @@ export const NextProvider = ({ children }: Props) => {
             pauseOnFocusLoss={false}
             pauseOnHover={false}
           />
-          \
           <ReactQueryDevtools />
         </SessionProvider>
       </QueryClientProvider>
