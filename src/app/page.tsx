@@ -31,3 +31,5 @@ async function getData() {
     console.log(e);
   }
 }
+
+export const dynamic = "force-dynamic";
