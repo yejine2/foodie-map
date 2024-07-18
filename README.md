@@ -95,3 +95,27 @@ Next.js 기반의 반응형 웹 애플리케이션
 7. **Google Analytics 연동**
    - 페이지뷰 추적
    - '찜하기' 기능 이벤트 트리거 설정
+  
+## 트러블 슈팅
+
+### 문제 배경
+Next.js App Router로 마이그레이션을 진행하면서, Next-auth의 `authOptions`를 사용하는 API 라우트에서 타입 에러가 발생했습니다.
+
+### 문제 분석
+- App Router에서 API 라우트는 기본적으로 HTTP 메소드별로 분리된 함수들을 export해야 합니다.
+- `authOptions` 객체가 API 라우트에서 export되는 함수와 직접적인 관련이 없습니다.
+
+### 해결 방법
+- `authOptions`를 별도의 파일로 분리하고, API 라우트 파일에서는 이를 import하여 사용하는 방식으로 문제를 해결했습니다.
+```typescript
+// src/app/api/auth/[...nextauth]/route.ts
+import NextAuth from 'next-auth';
+import { authOptions } from "@/lib/authOptions";; // 분리된 authOptions 파일
+
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
+```
+
+- [작성 블로그](https://velog.io/@yejine2/Next.js-App-Router%EC%97%90%EC%84%9C-authOptions-%EA%B4%80%EB%A0%A8-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0%ED%95%98%EA%B8%B0
+)
+ 
