@@ -58,7 +58,7 @@ Next.js 기반의 반응형 웹 애플리케이션
 - **데이터베이스**: Prisma, Supabase
 - **인증**: Next-auth
 - **폼 관리**: React-hook-form
-- **상태 관리**: React-query
+- **상태 관리**: Recoil, React-query
 - **스타일링**: TailwindCSS
 - **지도 API**: Kakao map API
 
