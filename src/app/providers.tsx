@@ -8,6 +8,7 @@ import { RecoilRoot } from "recoil";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "@/components/Navbar";
+import TabBar from "@/components/TabBar";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ export const NextLayout = ({ children }: Props) => {
     <div className="layout">
       <Navbar />
       {children}
+      <TabBar />
     </div>
   );
 };

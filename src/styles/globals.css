@@ -33,33 +33,7 @@ body {
 }
 
 .layout {
-  @apply pt-[52px];
-}
-
-@media only screen and (max-width: 600px) {
-  .navbar--mobile {
-    @apply fixed w-full text-white h-screen top-[52px] bg-blue-800 z-[100];
-  }
-
-  .navbar__list {
-    @apply hidden;
-  }
-
-  .navbar__button {
-    @apply block px-[18px] py-0;
-  }
-
-  .navbar__list--item--mobile {
-    @apply cursor-pointer;
-  }
-
-  .navbar__list--item--mobile:hover {
-    @apply text-gray-300;
-  }
-
-  .navbar__list--mobile {
-    @apply flex flex-col gap-4 px-[18px] py-6;
-  }
+  @apply pb-[55px] sm:pb-0 sm:pt-[52px];
 }
 
 .infowindow {
