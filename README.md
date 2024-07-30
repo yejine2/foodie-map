@@ -118,4 +118,13 @@ export { handler as GET, handler as POST };
 
 - [작성 블로그](https://velog.io/@yejine2/Next.js-App-Router%EC%97%90%EC%84%9C-authOptions-%EA%B4%80%EB%A0%A8-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0%ED%95%98%EA%B8%B0
 )
- 
+
+## 개선 사항
+![A4 - 10](https://github.com/user-attachments/assets/611f3790-b091-4f04-aacb-cae98f6acdc3)
+
+
+#### UX/UI 개선
+- **기존 문제점**: 배포 후 지인들에게 피드백을 요청했을 때, 대부분이 모바일로 접속하였고 메뉴 버튼(햄버거 아이콘)을 클릭하여 페이지 이동을 하는 것이 번거롭다는 의견을 들었습니다.
+- **개선 사항**: 사용자 피드백을 반영하여 직관적인 UI와 한 번의 클릭으로 페이지 이동이 가능하도록 모바일 웹에서는 하단 탭바를 추가했습니다.
+- **개선 결과**: 사용자가 쉽게 네비게이션할 수 있어서 접근성이 향상되고, 사용자 경험이 개선되었습니다.
+
