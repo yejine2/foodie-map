@@ -53,9 +53,9 @@ export default function CurrentLocationButton() {
       <button
         type="button"
         onClick={handleCurrentPosition}
-        className="fixed z-10 p-2 shadow right-10 bottom-10 bg-white rounded-md hover:shadow-lg focus:shadow-lg hover:bg-blue-200"
+        className="fixed z-10 flex p-2 gap-1 items-center shadow-3xl right-4 bottom-10 mb-10 md:mb-0 bg-white rounded-full hover:bg-blue-200 border-gray-100 border"
       >
-        <MdOutlineMyLocation className="w-5 h-5" />
+        <MdOutlineMyLocation className="w-5 h-5 text-blue-400" />
       </button>
     </>
   );

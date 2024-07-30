@@ -10,8 +10,8 @@ export default async function Home() {
     <>
       <Map />
       <Markers stores={stores} />
-      <StoreBox />
       <CurrentLocationButton />
+      <StoreBox />
     </>
   );
 }

@@ -105,8 +105,6 @@ export default function StorePage({ params, searchParams }: ParamsProps) {
           <dl className="divide-y divide-gray-100">
             <StoreInfoItem title="카테고리" value={store?.category} />
             <StoreInfoItem title="주소" value={store?.address} />
-            <StoreInfoItem title="위도" value={store?.lat} />
-            <StoreInfoItem title="경도" value={store?.lng} />
             <StoreInfoItem title="연락처" value={store?.phone} />
             <StoreInfoItem
               title="식품인증구분"
@@ -118,8 +116,8 @@ export default function StorePage({ params, searchParams }: ParamsProps) {
       </div>
       {isSuccess && (
         <>
-          <div className="overflow-hidden w-full mb-20 max-w-5xl mx-auto max-h-[600px]">
-            <Map lat={store?.lat} lng={store?.lng} zoom={1} />
+          <div className="overflow-hidden w-full mx-auto max-h-[300px] max-w-5xl px-4">
+            <Map lat={store?.lat} lng={store?.lng} zoom={3} />
             <Marker store={store} />
           </div>
           <Comments storeId={store.id} page={searchParams.page} />

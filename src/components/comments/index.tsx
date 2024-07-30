@@ -29,7 +29,7 @@ export default function Comments({ storeId, page = "" }: CommentProps) {
   );
 
   return (
-    <div className="md:max-w-2xl py-8 px-2 mb-20 mx-auto">
+    <div className="md:max-w-2xl py-8 px-4 mb-20 mx-auto">
       <h3 className="text-lg font-semibold">댓글</h3>
       {status === "authenticated" && (
         <CommentForm storeId={storeId} refetch={refetch} />

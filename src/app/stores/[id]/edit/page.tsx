@@ -87,7 +87,7 @@ export default function StoreEditPage({ params }: { params: { id: string } }) {
             아래 내용을 입력해서 맛집을 수정해주세요
           </p>
 
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8">
+          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-4">
             <div>
               <label
                 htmlFor="name"
