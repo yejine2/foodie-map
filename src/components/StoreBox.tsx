@@ -18,7 +18,7 @@ export default function StoreBox() {
   const [store, setStore] = useRecoilState(currentStoreState);
 
   return (
-    <div className="fixed transition ease-in-out delay-150 inset-x-0 mx-auto bottom-0 mb-[55px] md:bottom-20 rounded-t-lg md:rounded-lg shadow-lg max-w-sm md:max-w-xl z-10 w-full bg-white">
+    <div className="fixed transition ease-in-out delay-150 inset-x-0 mx-auto bottom-0 mb-[55px] md:bottom-20 rounded-t-lg md:rounded-lg shadow-lg md:max-w-xl z-10 w-full bg-white">
       {store && (
         <>
           <div className="md:p-8 p-4">
