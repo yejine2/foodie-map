@@ -1,62 +1,19 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useQuery } from "react-query";
-import axios from "axios";
-import { StoreType } from "@/interface";
+import React from "react";
+import useStoreDetail from "./useStoreDetail";
 import Loader from "@/components/Loader";
 import Map from "@/components/Map";
 import Marker from "@/components/Marker";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { toast } from "react-toastify";
 import Like from "@/components/Like";
 import Comments from "@/components/comments";
+import { useSession } from "next-auth/react";
 
-interface ParamsProps {
-  params: { id: string };
-  searchParams: { page: string };
-}
-
-export default function StorePage({ params, searchParams }: ParamsProps) {
-  const router = useRouter();
-  const id = params.id;
+export default function StoreDetailClient() {
   const { status } = useSession();
-
-  const fetchStore = async () => {
-    const { data } = await axios(`/api/stores?id=${id}`);
-    return data as StoreType;
-  };
-
-  const {
-    data: store,
-    isFetching,
-    isSuccess,
-    isError,
-  } = useQuery<StoreType>(`store-${id}`, fetchStore, {
-    enabled: !!id,
-    refetchOnWindowFocus: false,
-  });
-
-  const handleDelete = async () => {
-    const confirm = window.confirm("해당 가게를 삭제하시겠습니까?");
-
-    if (confirm && store) {
-      try {
-        const result = await axios.delete(`/api/stores?id=${store?.id}`);
-
-        if (result.status === 200) {
-          toast.success("가게를 삭제했습니다.");
-          router.replace("/");
-        } else {
-          toast.error("다시 시도해주세요.");
-        }
-      } catch (e) {
-        console.log(e);
-        toast.error("다시 시도해주세요.");
-      }
-    }
-  };
+  const { store, isFetching, isSuccess, isError, handleDelete, page } =
+    useStoreDetail();
 
   if (isError) {
     return (
@@ -72,7 +29,7 @@ export default function StorePage({ params, searchParams }: ParamsProps) {
 
   return (
     <>
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="max-w-3xl mx-auto px-4 py-8">
         <div className="flex flex-col sm:flex-row justify-between py-4">
           <div>
             <h3 className="text-base font-semibold leading-7 text-gray-900">
@@ -114,13 +71,13 @@ export default function StorePage({ params, searchParams }: ParamsProps) {
           </dl>
         </div>
       </div>
-      {isSuccess && (
+      {isSuccess && store && (
         <>
-          <div className="overflow-hidden w-full mx-auto max-h-[300px] max-w-5xl px-4">
+          <div className="overflow-hidden w-full mx-auto max-h-[200px] max-w-2xl px-4">
             <Map lat={store?.lat} lng={store?.lng} zoom={3} />
             <Marker store={store} />
           </div>
-          <Comments storeId={store.id} page={searchParams.page} />
+          <Comments storeId={String(store.id)} page={page ?? "1"} />
         </>
       )}
     </>

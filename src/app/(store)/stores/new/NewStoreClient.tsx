@@ -1,40 +1,17 @@
 "use client";
 
+import React from "react";
+import useNewStore from "./useNewStore";
 import { CATEGORY_ARR, FOOD_CERTIFY_ARR, STORE_TYPE_ARR } from "@/data/store";
-import axios from "axios";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import AddressSearch from "@/components/AddressSearch";
-import { StoreType } from "@/interface";
 
-export default function StoreNewPage() {
-  const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<StoreType>();
+export default function NewStoreClient() {
+  const { register, handleSubmit, setValue, errors, onSubmit } = useNewStore();
+
   return (
     <form
       className="px-4 md:max-w-3xl mx-auto py-8"
-      onSubmit={handleSubmit(async (data) => {
-        try {
-          const result = await axios.post("/api/stores", data);
-          if (result.status === 200) {
-            // 성공 케이스
-            toast.success("맛집을 등록했습니다.");
-            router.replace(`/stores/${result?.data?.id}`);
-          } else {
-            // 실패 케이스
-            toast.error("다시 시도해주세요");
-          }
-        } catch (e) {
-          console.log(e);
-          toast.error("데이터 생성중 문제가 생겼습니다. 다시 시도해주세요.");
-        }
-      })}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
@@ -119,7 +96,7 @@ export default function StoreNewPage() {
             />
             <div>
               <label
-                htmlFor="city"
+                htmlFor="foodCertifyName"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 식품인증구분
@@ -174,21 +151,12 @@ export default function StoreNewPage() {
         </div>
       </div>
 
-      <div className="mt-6 flex items-center justify-end gap-x-6">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="text-sm font-semibold leading-6 text-gray-900"
-        >
-          뒤로가기
-        </button>
-        <button
-          type="submit"
-          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          제출하기
-        </button>
-      </div>
+      <button
+        type="submit"
+        className="w-full rounded-full bg-blue-700 hover:bg-blue-600 p-3 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      >
+        등록하기
+      </button>
     </form>
   );
 }

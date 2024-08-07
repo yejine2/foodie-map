@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 interface CommentFormProps {
-  storeId: number;
+  storeId: string;
   refetch: () => void;
 }
 

@@ -1,32 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
+import useFetchComments from "@/hooks/useFetchComments";
 import { useSession } from "next-auth/react";
-import CommentForm from "./CommentForm";
-import { useQuery } from "react-query";
-import axios from "axios";
-import { CommentApiResponse } from "@/interface";
-import CommentList from "./CommentList";
 import Pagination from "../Pagination";
+import CommentForm from "./CommentForm";
+import CommentList from "./CommentList";
 
 interface CommentProps {
-  storeId: number;
-  page: string;
+  storeId: string;
+  page?: string;
 }
 
 export default function Comments({ storeId, page = "" }: CommentProps) {
   const { status } = useSession();
-
-  const fetchComments = async () => {
-    const { data } = await axios(
-      `/api/comments?storeId=${storeId}&limit=5&page=${page}`
-    );
-
-    return data as CommentApiResponse;
-  };
-
-  const { data: comments, refetch } = useQuery(
-    `comments-${storeId}-${page}`,
-    fetchComments
-  );
+  const { comments, refetch } = useFetchComments({ storeId });
 
   return (
     <div className="md:max-w-2xl py-8 px-4 mb-20 mx-auto">

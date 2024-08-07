@@ -1,50 +1,20 @@
 "use client";
 
-import { CATEGORY_ARR, FOOD_CERTIFY_ARR, STORE_TYPE_ARR } from "@/data/store";
-import axios from "axios";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import AddressSearch from "@/components/AddressSearch";
-import { StoreType } from "@/interface";
-import { useQuery } from "react-query";
 import Loader from "@/components/Loader";
+import { CATEGORY_ARR, FOOD_CERTIFY_ARR, STORE_TYPE_ARR } from "@/data/store";
+import useEditStore from "./useEditStore";
 
-export default function StoreEditPage({ params }: { params: { id: string } }) {
-  const router = useRouter();
-  const id = params?.id;
-
-  const fetchStore = async () => {
-    const { data } = await axios(`/api/stores?id=${id}`);
-    return data as StoreType;
-  };
-
+export default function EditStoreClient() {
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
-  } = useForm<StoreType>();
-
-  const {
-    data: store,
+    errors,
     isFetching,
     isError,
-  } = useQuery(`store-${id}`, fetchStore, {
-    onSuccess: (data) => {
-      setValue("id", data.id);
-      setValue("name", data.name);
-      setValue("phone", data.phone);
-      setValue("lat", data.lat);
-      setValue("lng", data.lng);
-      setValue("address", data.address);
-      setValue("foodCertifyName", data.foodCertifyName);
-      setValue("storeType", data.storeType);
-      setValue("category", data.category);
-    },
-    enabled: !!id,
-    refetchOnWindowFocus: false,
-  });
+    onSubmit,
+  } = useEditStore();
 
   if (isError) {
     return (
@@ -61,22 +31,7 @@ export default function StoreEditPage({ params }: { params: { id: string } }) {
   return (
     <form
       className="px-4 md:max-w-3xl mx-auto py-8"
-      onSubmit={handleSubmit(async (data) => {
-        try {
-          const result = await axios.put("/api/stores", data);
-          if (result.status === 200) {
-            // 성공 케이스
-            toast.success("맛집을 수정했습니다.");
-            router.replace(`/stores/${result?.data?.id}`);
-          } else {
-            // 실패 케이스
-            toast.error("다시 시도해주세요");
-          }
-        } catch (e) {
-          console.log(e);
-          toast.error("데이터 수정중 문제가 생겼습니다. 다시 시도해주세요.");
-        }
-      })}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
@@ -216,21 +171,12 @@ export default function StoreEditPage({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      <div className="mt-6 flex items-center justify-end gap-x-6">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="text-sm font-semibold leading-6 text-gray-900"
-        >
-          뒤로가기
-        </button>
-        <button
-          type="submit"
-          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          수정하기
-        </button>
-      </div>
+      <button
+        type="submit"
+        className="w-full rounded-full bg-blue-700 hover:bg-blue-600 p-3 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      >
+        수정하기
+      </button>
     </form>
   );
 }
