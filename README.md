@@ -95,36 +95,60 @@ Next.js 기반의 반응형 웹 애플리케이션
 7. **Google Analytics 연동**
    - 페이지뷰 추적
    - '찜하기' 기능 이벤트 트리거 설정
-  
+
 ## 트러블 슈팅
 
 ### 문제 배경
+
 Next.js App Router로 마이그레이션을 진행하면서, Next-auth의 `authOptions`를 사용하는 API 라우트에서 타입 에러가 발생했습니다.
 
 ### 문제 분석
+
 - App Router에서 API 라우트는 기본적으로 HTTP 메소드별로 분리된 함수들을 export해야 합니다.
 - `authOptions` 객체가 API 라우트에서 export되는 함수와 직접적인 관련이 없습니다.
 
 ### 해결 방법
+
 - `authOptions`를 별도의 파일로 분리하고, API 라우트 파일에서는 이를 import하여 사용하는 방식으로 문제를 해결했습니다.
+
 ```typescript
 // src/app/api/auth/[...nextauth]/route.ts
-import NextAuth from 'next-auth';
-import { authOptions } from "@/lib/authOptions";; // 분리된 authOptions 파일
+import NextAuth from "next-auth";
+import { authOptions } from "@/lib/authOptions"; // 분리된 authOptions 파일
 
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
 ```
 
-- [작성 블로그](https://velog.io/@yejine2/Next.js-App-Router%EC%97%90%EC%84%9C-authOptions-%EA%B4%80%EB%A0%A8-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0%ED%95%98%EA%B8%B0
-)
+- [작성 블로그](https://velog.io/@yejine2/Next.js-App-Router%EC%97%90%EC%84%9C-authOptions-%EA%B4%80%EB%A0%A8-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0%ED%95%98%EA%B8%B0)
 
 ## 개선 사항
+
+### 코드 구조 개선 [[관련 PR]](https://github.com/yejine2/foodie-map/pull/1)
+
+- **기존 문제점**: page.tsx 컴포넌트에 레이아웃 로직과 비즈니스 로직 혼재되어 가독성이 떨어지고, 유지보수가 어려웠습니다.
+- **개선 사항 및 결과**: 레이아웃 로직에서는 비즈니스 로직을 알 필요가 없다고 판단하여, 두 로직을 분리했습니다.
+
+```text
+// 폴더 구조
+(store)
+ ┗ stores
+ ┃ ┣ StoreListClient.tsx // 레이아웃 클라이언트 컴포넌트
+ ┃ ┣ page.tsx // 라우팅
+ ┃ ┗ useStoreList.ts // 비즈니스 로직 - 커스텀 훅
+```
+
+- 커스텀 훅 도입: 비즈니스 로직을 커스텀 훅으로 추상화하여, 각각의 관심사를 분리했습니다.
+- 코드 재사용성 증가: 여러 컴포넌트에서 동일한 데이터 페칭 로직을 재사용할 수 있게 되었습니다.
+- 유지보수 용이성: 중앙에서 관리되는 데이터 페칭 로직을 통해 수정이 용이해졌습니다.
+- 가독성 향상: 비즈니스 로직과 UI 로직을 분리하여 컴포넌트의 가독성이 높아졌습니다.
+
+---
+
+### UX/UI 개선
+
 ![A4 - 10](https://github.com/user-attachments/assets/611f3790-b091-4f04-aacb-cae98f6acdc3)
 
-
-#### UX/UI 개선
 - **기존 문제점**: 배포 후 지인들에게 피드백을 요청했을 때, 대부분이 모바일로 접속하였고 메뉴 버튼(햄버거 아이콘)을 클릭하여 페이지 이동을 하는 것이 번거롭다는 의견을 들었습니다.
 - **개선 사항**: 사용자 피드백을 반영하여 직관적인 UI와 한 번의 클릭으로 페이지 이동이 가능하도록 모바일 웹에서는 하단 탭바를 추가했습니다.
 - **개선 결과**: 사용자가 쉽게 네비게이션할 수 있어서 접근성이 향상되고, 사용자 경험이 개선되었습니다.
-
