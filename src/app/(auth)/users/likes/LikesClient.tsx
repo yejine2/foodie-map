@@ -1,30 +1,14 @@
 "use client";
 
+import React from "react";
+import useLikes from "./useLikes";
 import Loading from "@/components/Loading";
 import StoreList from "@/components/StoreList";
-import { LikeApiResponse, LikeType } from "@/interface";
-import axios from "axios";
-import { useQuery } from "react-query";
 import Pagination from "@/components/Pagination";
+import { LikeType } from "@/interface";
 
-export default function LikesPage({
-  searchParams,
-}: {
-  searchParams: { page: string };
-}) {
-  const page = searchParams?.page || "1";
-
-  const fetchLikes = async () => {
-    const { data } = await axios(`/api/likes?limit=10&page=${page}`);
-    return data as LikeApiResponse;
-  };
-
-  const {
-    data: likes,
-    isError,
-    isLoading,
-    isSuccess,
-  } = useQuery(`likes-${page}`, fetchLikes);
+export default function LikesClient() {
+  const { likes, isLoading, isError, isSuccess, page } = useLikes();
 
   if (isError) {
     return (
@@ -42,11 +26,11 @@ export default function LikesPage({
         {isLoading ? (
           <Loading />
         ) : (
-          likes?.data?.map((like: LikeType, index) => (
+          likes?.data?.map((like: LikeType, index: number) => (
             <StoreList i={index} store={like.store} key={index} />
           ))
         )}
-        {isSuccess && !likes.data.length && (
+        {isSuccess && !likes?.data?.length && (
           <div className="p-4 border border-gray-200 rounded-md text-sm text-gray-400">
             찜한 가게가 없습니다.
           </div>

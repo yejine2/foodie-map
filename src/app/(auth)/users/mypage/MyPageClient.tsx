@@ -3,36 +3,20 @@
 /* eslint-disable @next/next/no-img-element */
 import CommentList from "@/components/comments/CommentList";
 import Pagination from "@/components/Pagination";
-import { CommentApiResponse } from "@/interface";
-import axios from "axios";
+import useFetchComments from "@/hooks/useFetchComments";
 import { useSession, signOut } from "next-auth/react";
-import { useQuery } from "react-query";
 
 interface InfoRowProps {
   label: string;
   content: React.ReactNode;
 }
 
-export default function Mypage({
-  searchParams,
-}: {
-  searchParams: { page: string };
-}) {
-  const page = searchParams?.page || "1";
-
-  const fetchComments = async () => {
-    const { data } = await axios(
-      `/api/comments?&limit=5&page=${page}&user=${true}`
-    );
-
-    return data as CommentApiResponse;
-  };
-
-  const { data: comments } = useQuery(`comments-${page}`, fetchComments);
+export default function MyPageClient() {
   const { data: session } = useSession();
+  const { comments, page } = useFetchComments({ user: true });
 
   return (
-    <div className="md:max-w-5xl px-4 mx-auto py-8">
+    <div className="md:max-w-3xl px-4 mx-auto py-8">
       <h3 className="text-base font-semibold leading-7 text-gray-900">
         마이페이지
       </h3>

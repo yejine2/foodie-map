@@ -9,7 +9,7 @@ import { RiKakaoTalkFill } from "react-icons/ri";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-export default function LoginPage() {
+export default function LoginClient() {
   const { status } = useSession();
   const router = useRouter();
 
