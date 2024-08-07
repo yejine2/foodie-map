@@ -77,7 +77,7 @@ export default function StoreDetailClient() {
             <Map lat={store?.lat} lng={store?.lng} zoom={3} />
             <Marker store={store} />
           </div>
-          <Comments storeId={String(store.id)} page={page ?? "1"} />
+          <Comments storeId={store.id} page={page ?? "1"} />
         </>
       )}
     </>

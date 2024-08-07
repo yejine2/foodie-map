@@ -6,7 +6,7 @@ import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
 
 interface CommentProps {
-  storeId: string;
+  storeId: number;
   page?: string;
 }
 

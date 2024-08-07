@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { CommentApiResponse } from "@/interface";
 
 interface UseFetchCommentsParams {
-  storeId?: string;
+  storeId?: number;
   user?: boolean;
 }
 
