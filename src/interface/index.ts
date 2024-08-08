@@ -38,7 +38,7 @@ interface UserType {
   image?: string | null;
 }
 
-export interface CommenType {
+export interface CommentType {
   id: number;
   storeId: number;
   userId: number;
@@ -49,7 +49,7 @@ export interface CommenType {
 }
 
 export interface CommentApiResponse {
-  data: CommenType[];
+  data: CommentType[];
   totalPage?: number;
   page?: number;
 }

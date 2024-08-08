@@ -1,19 +1,14 @@
-import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
 import axios, { AxiosResponse } from "axios";
 import { StoreType } from "@/interface";
 import { toast } from "react-toastify";
+import { UseNewStoreReturn } from "../../new/useNewStore";
 
-interface UseEditStoreReturn {
-  register: ReturnType<typeof useForm<StoreType>>["register"];
-  handleSubmit: ReturnType<typeof useForm<StoreType>>["handleSubmit"];
-  setValue: ReturnType<typeof useForm<StoreType>>["setValue"];
-  errors: ReturnType<typeof useForm<StoreType>>["formState"]["errors"];
+interface UseEditStoreReturn extends UseNewStoreReturn {
   isFetching: boolean;
   isError: boolean;
-  onSubmit: (data: StoreType) => void;
 }
 
 export default function useEditStore(): UseEditStoreReturn {

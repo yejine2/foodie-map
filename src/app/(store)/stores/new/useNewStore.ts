@@ -4,7 +4,7 @@ import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { StoreType } from "@/interface";
 
-interface UseNewStoreReturn {
+export interface UseNewStoreReturn {
   register: ReturnType<typeof useForm<StoreType>>["register"];
   handleSubmit: ReturnType<typeof useForm<StoreType>>["handleSubmit"];
   setValue: ReturnType<typeof useForm<StoreType>>["setValue"];
