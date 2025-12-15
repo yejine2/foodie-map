@@ -2,7 +2,7 @@
 
 ![Thumbnail](https://github.com/user-attachments/assets/a9c8f050-bf86-4c39-a524-8c5faf7d9964)
 
-🔗 Link: [https://www.foodiemap.site/](https://www.foodiemap.site/)
+🔗 Link: 호스팅 중단
 
 ## 프로젝트 소개
 
